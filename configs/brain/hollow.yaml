@@ -1,0 +1,3 @@
+mixing_type: linear
+n_neurons: 200
+ar_order: 2

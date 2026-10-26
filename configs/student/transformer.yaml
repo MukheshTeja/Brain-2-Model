@@ -1,0 +1,5 @@
+name: transformer
+hidden_dim: 32
+# Scaffold for a later milestone — not wired into training/sweep.py yet.
+n_heads: 4
+n_layers: 2

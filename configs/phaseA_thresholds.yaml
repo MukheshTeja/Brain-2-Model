@@ -1,0 +1,22 @@
+# Pre-registered numeric thresholds for the Phase A pass criterion
+# (scripts/verify_phaseA.py). Set BEFORE looking at smoke-run results.
+tost_alpha: 0.05
+
+# Verdict rule clause 1: R5 must beat every rung; R5 vs R4 (real vs real,
+# only pairing differs) is the hardest comparison and gets an explicit
+# minimum paired Cohen's d across seeds.
+min_effect_size_r5_vs_r4: 0.2
+
+# Verdict rule clause 2: knockout must be statistically equivalent to R3
+# within this margin (accuracy units) via paired TOST across seeds.
+knockout_vs_r3_margin: 0.05
+
+# H2 check: in the hollow brain, real data (R5) should be equivalent to
+# stimulus-shuffled real data (R4) within this margin — no genuine
+# structure to lose by shuffling.
+hollow_r5_vs_r4_margin: 0.03
+
+# Headroom gate: structured R5 must beat R0 by at least this much zero-shot
+# accuracy (averaged across zero-shot variants) before the full ladder is
+# trusted at all.
+headroom_min_margin: 0.03

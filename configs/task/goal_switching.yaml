@@ -1,0 +1,9 @@
+seq_len: 60
+n_targets: 3
+n_distractors: 3
+n_values: 4
+goal_switch_period_range: [8, 14]
+probe_prob: 0.3
+stimulus_prob: 0.7
+target_hit_prob: 0.35
+goal_sequence_mode: random

@@ -1,0 +1,15 @@
+# Milestone 1 smoke run: few seeds, 2 alpha values, both brains, first ladder plot.
+n_train_trials: 60
+data_seed: 999
+teacher_hidden_dim: 64
+teacher_train_steps: 600
+n_task_variables: 4
+n_pca_components: 8
+alphas: [0.0, 0.2]
+seeds: [0, 1, 2]
+n_train_epochs: 400
+lr: 0.001
+n_eval_sequences: 150
+eraser: leace
+headroom_alpha: 0.2
+headroom_epochs: 400  # must match n_train_epochs — see cdb2m/training/sweep.py comment

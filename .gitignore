@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Hydra run directories
+outputs/
+multirun/
+
+# Generated results (data, plots) — not source
+results/*.csv
+results/*.png
+results/*_headroom.csv
+
+.DS_Store

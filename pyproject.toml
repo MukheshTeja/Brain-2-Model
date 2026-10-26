@@ -1,0 +1,31 @@
+[project]
+name = "cd-b2m"
+version = "0.1.0"
+description = "Causally-Disentangled Brain-to-Model Transfer: Null Ladder toolkit + experiment code"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.1",
+    "numpy>=1.24",
+    "scipy>=1.11",
+    "scikit-learn>=1.3",
+    "pandas>=2.0",
+    "hydra-core>=1.3",
+    "omegaconf>=2.3",
+    "matplotlib>=3.7",
+    "statsmodels>=0.14",
+    "pytest>=7.4",
+]
+
+[project.optional-dependencies]
+fmri = ["nilearn>=0.10"]
+wandb = ["wandb>=0.16"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["nullladder*", "cdb2m*"]

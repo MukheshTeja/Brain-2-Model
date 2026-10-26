@@ -1,0 +1,10 @@
+defaults:
+  - task: goal_switching
+  - student: gru
+  - loss: linear_mse
+  - brain: structured
+  - sweep: smoke
+  - _self_
+
+results_csv: results/phaseA_smoke.csv
+thresholds_path: configs/phaseA_thresholds.yaml

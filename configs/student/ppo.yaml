@@ -1,0 +1,5 @@
+name: ppo
+hidden_dim: 32
+# Scaffold for the RL variant of the task — not wired into training/sweep.py yet.
+gamma: 0.99
+clip_ratio: 0.2

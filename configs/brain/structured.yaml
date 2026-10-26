@@ -1,0 +1,2 @@
+mixing_type: linear  # "nonlinear" available for a harder Phase A variant
+n_neurons: 200
