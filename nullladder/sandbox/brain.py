@@ -123,3 +123,44 @@ def make_hollow_brain(
     mixed = structured.mixing.apply(unrelated_latent)
     noise = structured.noise_model.generate(T, seed=seed + 1)
     return BrainResult(signal=mixed + noise, mixing=structured.mixing, noise_model=structured.noise_model)
+
+
+# --------------------------------------------------------------------------
+# RQ2 sandbox: a brain with REGIONS whose task content is known in advance,
+# so the region-attribution (Shapley) analysis can be checked against ground
+# truth before it is applied to real fMRI networks.
+SANDBOX_REGIONS = {
+    # region name -> which teacher task variables (PCA components) it carries
+    "R_A_pc12": (0, 1),  # strongest task components
+    "R_B_pc34": (2, 3),  # weaker task components
+    "R_C_mixed": (0, 1, 2, 3),  # everything, at half gain
+    "R_D_noise": (),  # no task content: temporally-matched noise only
+}
+
+
+@dataclass
+class RegionalBrain:
+    signals: dict[str, np.ndarray]  # region -> [T, n_neurons_per_region]
+
+    def coalition(self, regions) -> np.ndarray:
+        return np.concatenate([self.signals[r] for r in sorted(regions)], axis=1)
+
+
+def make_regional_brain(task_variables: np.ndarray, n_per_region: int = 50, seed: int = 0) -> RegionalBrain:
+    T, n_latent = task_variables.shape
+    hollow_latent = _independent_ar_surrogate(task_variables, ar_order=2, seed=seed + 99)
+    signals = {}
+    for k, (name, comps) in enumerate(SANDBOX_REGIONS.items()):
+        noise = NoiseModel(n_per_region, seed=seed + 10 * k + 1).generate(T, seed=seed + 10 * k + 2)
+        if comps:
+            gain = 0.5 if name == "R_C_mixed" else 1.0
+            latent = task_variables[:, list(comps)]
+            # scale each component to unit variance so regions differ in CONTENT, not loudness
+            latent = latent / (latent.std(axis=0, keepdims=True) + 1e-12)
+            mix = Mixing(len(comps), n_per_region, "linear", seed=seed + 10 * k)
+            signals[name] = gain * mix.apply(latent) + noise
+        else:
+            lat = hollow_latent / (hollow_latent.std(axis=0, keepdims=True) + 1e-12)
+            mix = Mixing(n_latent, n_per_region, "linear", seed=seed + 10 * k)
+            signals[name] = mix.apply(lat) + noise  # brain-like but task-free
+    return RegionalBrain(signals)

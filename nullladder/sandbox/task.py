@@ -101,6 +101,11 @@ class GoalSwitchingTask:
         labels = np.full((batch_size, T), cfg.n_values, dtype=np.int64)  # default "nothing remembered"
         probe_mask = np.zeros((batch_size, T), dtype=bool)
         goal_trace = np.full((batch_size, T), -1, dtype=np.int64)
+        # remembered value for the ACTIVE goal at EVERY timestep (class V = nothing
+        # remembered). `labels` only carries it at probe steps; the knockout needs
+        # the full latent state, otherwise it leaves the memory variable decodable
+        # at all non-probe timesteps (that was the Phase A knockout failure).
+        memory_trace = np.full((batch_size, T), cfg.n_values, dtype=np.int64)
 
         for b in range(batch_size):
             switches = self._goal_sequence(rng)
@@ -137,6 +142,7 @@ class GoalSwitchingTask:
                         probe_mask[b, t] = True
                         labels[b, t] = remembered[active_goal]
                 goal_trace[b, t] = active_goal
+                memory_trace[b, t] = remembered[active_goal]
                 t += 1
 
         return {
@@ -144,4 +150,5 @@ class GoalSwitchingTask:
             "labels": torch.from_numpy(labels),
             "probe_mask": torch.from_numpy(probe_mask),
             "goal_trace": torch.from_numpy(goal_trace),
+            "memory_trace": torch.from_numpy(memory_trace),
         }
