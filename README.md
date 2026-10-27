@@ -61,7 +61,7 @@ is not above R3 and is TOST-equivalent to it. SESOI: Phase A 0.05 (pre-registere
 scaffold's original mean-based rule is reported alongside it; it fails the Phase B
 hollow control, which is why the inferential version is used for headlines.
 
-## Results (full preset): see `results/report/REPORT.md`
+## Results (full preset): see `results/report/REPORT.md` and `results/report/COMPARISON.md` (vs prior work)
 
 | Structure-specific gain R5 − R3 (GRU, 95% CI) | |
 |---|---|
