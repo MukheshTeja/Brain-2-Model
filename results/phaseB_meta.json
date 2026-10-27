@@ -16,14 +16,14 @@
   "coal:MD|transitive": 0.06066572659062738,
   "hcp|list1": 0.3462021188231147,
   "hcp|list2": 0.16726389106405568,
-  "hollow|syllogism": 0.11552905745124616,
-  "hollow|transitive": 0.17045180265886478,
+  "hollow|syllogism": 0.11552905745124613,
+  "hollow|transitive": 0.17045180265886473,
   "planted_realsnr|syllogism": 0.061038364543176904,
-  "planted_realsnr|transitive": 0.07437319838829622,
-  "planted|syllogism": 0.9533138355755689,
-  "planted|transitive": 0.9570561017744478,
+  "planted_realsnr|transitive": 0.07437319838829619,
+  "planted|syllogism": 0.9533138355755687,
+  "planted|transitive": 0.9570561017744479,
   "real_dr|syllogism": 0.03545949635156333,
-  "real_dr|transitive": 0.09938893681771974
+  "real_dr|transitive": 0.09938893681771971
  },
  "realsnr_noise_scale": {
   "syllogism": 10.0,

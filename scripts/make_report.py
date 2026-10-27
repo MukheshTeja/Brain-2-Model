@@ -24,18 +24,18 @@ from cdb2m.analysis.core import (add_gains, fingerprint, mediation, paired, regi
 SESOI = {"A": 0.05, "B": 0.02}  # smallest effect of interest per phase (A: pre-registered margin; B: ~half the planted structure gain)
 
 RUNG_ORDER = ["R0", "R1", "R2", "R3", "R4", "R5", "knockout", "KO_oracle"]
-RUNG_LABEL = {"R0": "R0\nGaussian", "R1": "R1\nphase", "R2": "R2\ncov", "R3": "R3\nmax-ent", "R4": "R4\nshuffled",
-              "R5": "R5\nreal", "knockout": "KO\nLEACE", "KO_oracle": "KO\noracle"}
+RUNG_LABEL = {"R0": "R0\nGauss", "R1": "R1\nphase", "R2": "R2\ncov", "R3": "R3\nmaxent", "R4": "R4\nshuf",
+              "R5": "R5\nreal", "knockout": "KO", "KO_oracle": "KO\noracle"}
 # categorical slots 1-3 of the reference palette (validated all-pairs, light surface)
-C = {"structured": "#2a78d6", "planted": "#2a78d6", "real_dr": "#2a78d6", "hcp": "#2a78d6",
-     "hollow": "#eb6834", "planted_realsnr": "#1baf7a"}
+C = {"structured": "#2a78d6", "planted": "#2a78d6", "real_dr": "#1baf7a", "hcp": "#1baf7a",
+     "hollow": "#eb6834", "planted_realsnr": "#6250d6"}
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 STUDENT_NAME = {"gru": "GRU", "transformer": "Transformer", "ppo": "PPO agent"}
 ARM_NAME = {"structured": "structured brain", "hollow": "hollow brain", "planted": "planted (known structure)",
             "real_dr": "real fMRI (DR network)", "planted_realsnr": "planted @ real-fMRI SNR", "hcp": "real fMRI (HCP, MD)"}
 
 
-def _style(ax, title=None):
+def _style(ax, title=None, hline=True):
     ax.set_facecolor("#fcfcfb")
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
@@ -43,32 +43,32 @@ def _style(ax, title=None):
         ax.spines[s].set_color(MUTED)
     ax.tick_params(colors=MUTED, labelsize=8)
     ax.grid(axis="y", color=GRID, lw=0.8)
-    ax.axhline(0, color=MUTED, lw=0.8)
+    if hline:
+        ax.axhline(0, color=MUTED, lw=0.8)
     if title:
         ax.set_title(title, fontsize=10, color=INK, loc="left")
 
 
 def ladder_plot(zg: pd.DataFrame, arms, students, alpha, path, title):
-    fig, axes = plt.subplots(1, len(students), figsize=(4.6 * len(students), 3.6), squeeze=False, sharey=True)
+    fig, axes = plt.subplots(1, len(students), figsize=(5.4 * len(students), 3.8), squeeze=False, sharey=True)
     for ax, st in zip(axes[0], students):
         sub = zg[(zg.student == st) & (zg.alpha == alpha)]
-        for arm in arms:
+        for ai, arm in enumerate(arms):
+            off = (ai - (len(arms) - 1) / 2) * 0.12
             g = sub[sub.arm == arm]
             rungs = [r for r in RUNG_ORDER if r in set(g.rung)]
             if not rungs:
                 continue
             m = g.groupby("rung")["score"].mean().reindex(rungs)
             se = g.groupby("rung")["score"].sem().reindex(rungs)
-            x = [RUNG_ORDER.index(r) for r in rungs]
+            x = [RUNG_ORDER.index(r) + off for r in rungs]
             ax.errorbar(x, m.values, yerr=se.values, color=C.get(arm, MUTED), marker="o", ms=5, lw=2, capsize=2,
                         label=ARM_NAME.get(arm, arm))
-            ax.annotate(ARM_NAME.get(arm, arm), (x[-1], m.values[-1]), xytext=(4, 0), textcoords="offset points",
-                        fontsize=7, color=MUTED, va="center")
         ax.set_xticks(range(len(RUNG_ORDER)))
         ax.set_xticklabels([RUNG_LABEL[r] for r in RUNG_ORDER], fontsize=7)
         _style(ax, STUDENT_NAME.get(st, st))
     axes[0][0].set_ylabel("zero-shot gain vs no transfer\n(mean over unseen variants ± SEM)", fontsize=8, color=MUTED)
-    axes[0][-1].legend(fontsize=7, frameon=False, loc="lower left")
+    axes[0][0].legend(fontsize=7, frameon=False, loc="best")
     fig.suptitle(title, fontsize=11, color=INK, x=0.01, ha="left")
     fig.tight_layout()
     fig.savefig(path, dpi=150, facecolor="#fcfcfb")
@@ -108,7 +108,8 @@ def shapley_plot(tables: dict[str, pd.DataFrame], path):
         ax.barh(y, t.shapley_structure, color="#2a78d6", height=0.55, xerr=[lo, hi], ecolor=MUTED, capsize=2)
         ax.set_yticks(y)
         ax.set_yticklabels(t.region, fontsize=8)
-        _style(ax, name)
+        _style(ax, name, hline=False)
+        ax.grid(axis="y", visible=False)
         ax.axvline(0, color=MUTED, lw=0.8)
         ax.grid(axis="x", color=GRID, lw=0.8)
         ax.set_xlabel("Shapley value of structure-specific gain\n[gain(R5) − gain(R3)], 95% bootstrap CI", fontsize=8, color=MUTED)

@@ -50,15 +50,15 @@ Inter-subject RDM reliability (leave-one-subject-out r) — how much problem-lev
 
 | student | arm | R0 | R1 | R2 | R3 | R4 | R5 | knockout | KO_oracle | seeds | p(R5>R3) | KO closes gap | verdict | pre-reg rule |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| GRU | planted (known structure) | -0.004 | +0.002 | +0.002 | +0.012 | +0.001 | +0.047 | +0.020 | -0.004 | 10 | 0.000 | 78% (oracle 147%) | **GENUINE TRANSFER** | GENUINE TRANSFER |
-| GRU | hollow brain | +0.001 | +0.000 | +0.000 | +0.008 | +0.004 | +0.015 | +0.001 | +0.001 | 10 | 0.082 | – | **REGULARIZER** | GENUINE TRANSFER |
-| GRU | real fMRI (DR network) | -0.004 | +0.000 | +0.000 | -0.002 | +0.003 | +0.009 | -0.009 | – | 10 | 0.058 | 158% | **INCONCLUSIVE** | GENUINE TRANSFER |
-| Transformer | planted (known structure) | -0.003 | +0.010 | +0.010 | +0.007 | +0.011 | +0.017 | +0.010 | -0.001 | 5 | 0.103 | – | **INCONCLUSIVE** | GENUINE TRANSFER |
-| Transformer | hollow brain | -0.009 | +0.011 | +0.011 | -0.009 | -0.001 | +0.007 | +0.015 | +0.006 | 5 | 0.043 | -48% (oracle 8%) | **INCONCLUSIVE** | REGULARIZER |
-| Transformer | real fMRI (DR network) | -0.002 | +0.015 | +0.015 | +0.012 | +0.006 | +0.013 | -0.006 | – | 5 | 0.436 | – | **REGULARIZER** | REGULARIZER |
-| PPO agent | planted (known structure) | +0.015 | +0.015 | +0.015 | +0.008 | +0.008 | +0.021 | +0.023 | -0.000 | 5 | 0.050 | -21% (oracle 169%) | **INCONCLUSIVE** | GENUINE TRANSFER |
-| PPO agent | hollow brain | +0.006 | +0.012 | +0.012 | +0.007 | +0.006 | +0.006 | +0.008 | +0.009 | 5 | 0.534 | – | **REGULARIZER** | REGULARIZER |
-| PPO agent | real fMRI (DR network) | +0.002 | +0.010 | +0.010 | +0.008 | +0.015 | +0.005 | +0.008 | – | 5 | 0.644 | – | **REGULARIZER** | REGULARIZER |
+| GRU | planted (known structure) | +0.000 | +0.001 | +0.002 | +0.012 | +0.001 | +0.047 | +0.020 | -0.004 | 10 | 0.000 | 78% (oracle 147%) | **GENUINE TRANSFER** | GENUINE TRANSFER |
+| GRU | hollow brain | -0.007 | +0.005 | +0.000 | +0.008 | +0.004 | +0.015 | +0.001 | +0.001 | 10 | 0.082 | – | **REGULARIZER** | GENUINE TRANSFER |
+| GRU | real fMRI (DR network) | +0.003 | +0.003 | +0.005 | +0.002 | +0.006 | +0.009 | -0.007 | – | 30 | 0.032 | – | **INCONCLUSIVE** | REGULARIZER |
+| Transformer | planted (known structure) | +0.005 | -0.000 | +0.010 | +0.007 | +0.011 | +0.017 | +0.010 | -0.001 | 5 | 0.103 | – | **INCONCLUSIVE** | GENUINE TRANSFER |
+| Transformer | hollow brain | -0.004 | +0.015 | +0.011 | -0.009 | -0.001 | +0.007 | +0.015 | +0.006 | 5 | 0.043 | -48% (oracle 8%) | **INCONCLUSIVE** | REGULARIZER |
+| Transformer | real fMRI (DR network) | -0.004 | +0.017 | +0.015 | +0.012 | +0.006 | +0.013 | -0.006 | – | 5 | 0.436 | – | **REGULARIZER** | REGULARIZER |
+| PPO agent | planted (known structure) | +0.012 | +0.006 | +0.015 | +0.008 | +0.008 | +0.021 | +0.023 | -0.000 | 5 | 0.050 | -21% (oracle 169%) | **INCONCLUSIVE** | GENUINE TRANSFER |
+| PPO agent | hollow brain | +0.012 | +0.006 | +0.012 | +0.007 | +0.006 | +0.006 | +0.008 | +0.009 | 5 | 0.534 | – | **REGULARIZER** | REGULARIZER |
+| PPO agent | real fMRI (DR network) | +0.014 | +0.014 | +0.010 | +0.008 | +0.015 | +0.005 | +0.008 | – | 5 | 0.644 | – | **REGULARIZER** | REGULARIZER |
 
 Phase B sandbox check (planted → GENUINE TRANSFER, hollow → not transfer):
 
@@ -66,7 +66,18 @@ Phase B sandbox check (planted → GENUINE TRANSFER, hollow → not transfer):
 - **Transformer**: planted flagged ❌ · hollow not flagged ✅ → this student's real-data verdict is **not interpretable**
 - **PPO agent**: planted flagged ❌ · hollow not flagged ✅ → this student's real-data verdict is **not interpretable**
 
-**Power check — planted structure at the real data's SNR** (GRU, 10 seeds): R5−R3 = +0.048 (d = 2.28), R5−R0 = +0.046. Noise scale used: {'syllogism': 10.0, 'transitive': 9.0}.
+**Follow-up seed extension (GRU).** After the 10-seed run left real-data R5−R3 neither significant nor equivalent, 20 more seeds were run for the real-data ladders, the HCP ladder and the power arm only (declared here as a sequential extension; first-10-seed results shown for comparison):
+
+| slice | seeds | R5−R3 [95% CI] | p(R5>R3) |
+|---|---|---|---|
+| real fMRI (DR network) | 10 | +0.0113 [-0.0014, +0.0240] | 0.0582 |
+| real fMRI (DR network) | 30 | +0.0071 [-0.0001, +0.0143] | 0.0321 |
+| planted @ real-fMRI SNR | 10 | +0.0482 [+0.0351, +0.0613] | 0.0000 |
+| planted @ real-fMRI SNR | 30 | +0.0485 [+0.0424, +0.0545] | 0.0000 |
+| real fMRI (HCP, MD) | 10 | +0.0004 [-0.0119, +0.0126] | 0.4773 |
+| real fMRI (HCP, MD) | 30 | -0.0019 [-0.0087, +0.0049] | 0.7051 |
+
+**Power check — planted structure at the real data's SNR** (GRU, 30 seeds): R5−R3 = +0.048 (d = 2.87), R5−R0 = +0.045. Noise scale used: {'syllogism': 10.0, 'transitive': 9.0}.
 
 ## 3. Generalization fingerprints (GRU, α = 0.2)
 
@@ -88,23 +99,23 @@ Regularizers lift every variant a little; real structure lifts the variants that
 
 | variant | R0 | R3 | R4 | R5 | knockout | R5−R3 | p(R5>R3) |
 |---|---|---|---|---|---|---|---|
-| iid | -0.006 | +0.034 | -0.002 | +0.097 | +0.027 | +0.064 | 0.000 |
-| premises_4 | -0.006 | +0.011 | -0.010 | +0.062 | +0.023 | +0.051 | 0.000 |
-| premises_5 | -0.002 | +0.018 | +0.009 | +0.058 | +0.024 | +0.040 | 0.001 |
-| premises_6 | -0.015 | +0.002 | -0.010 | +0.020 | -0.001 | +0.017 | 0.036 |
-| propositional | -0.009 | -0.002 | +0.010 | +0.004 | +0.020 | +0.006 | 0.271 |
-| shuffled_order | +0.011 | +0.032 | +0.006 | +0.091 | +0.034 | +0.058 | 0.001 |
+| iid | +0.009 | +0.034 | -0.002 | +0.097 | +0.027 | +0.064 | 0.000 |
+| premises_4 | -0.002 | +0.011 | -0.010 | +0.062 | +0.023 | +0.051 | 0.000 |
+| premises_5 | +0.006 | +0.018 | +0.009 | +0.058 | +0.024 | +0.040 | 0.001 |
+| premises_6 | -0.006 | +0.002 | -0.010 | +0.020 | -0.001 | +0.017 | 0.036 |
+| propositional | -0.001 | -0.002 | +0.010 | +0.004 | +0.020 | +0.006 | 0.271 |
+| shuffled_order | +0.003 | +0.032 | +0.006 | +0.091 | +0.034 | +0.058 | 0.001 |
 
 **Phase B real fMRI (GRU)**
 
 | variant | R0 | R3 | R4 | R5 | knockout | R5−R3 | p(R5>R3) |
 |---|---|---|---|---|---|---|---|
-| iid | +0.009 | +0.004 | +0.013 | +0.016 | -0.014 | +0.012 | 0.233 |
-| premises_4 | -0.013 | -0.011 | -0.006 | +0.009 | -0.015 | +0.020 | 0.034 |
-| premises_5 | +0.012 | -0.007 | +0.014 | +0.014 | -0.002 | +0.021 | 0.050 |
-| premises_6 | -0.009 | -0.012 | -0.010 | -0.013 | -0.020 | -0.001 | 0.582 |
-| propositional | -0.008 | +0.004 | -0.003 | +0.006 | -0.000 | +0.001 | 0.432 |
-| shuffled_order | -0.002 | +0.015 | +0.022 | +0.030 | -0.007 | +0.015 | 0.087 |
+| iid | +0.008 | +0.004 | +0.010 | +0.006 | -0.015 | +0.002 | 0.392 |
+| premises_4 | +0.002 | -0.003 | +0.004 | +0.008 | -0.016 | +0.011 | 0.042 |
+| premises_5 | +0.007 | +0.001 | +0.013 | +0.011 | -0.005 | +0.010 | 0.057 |
+| premises_6 | -0.003 | -0.004 | +0.001 | -0.008 | -0.013 | -0.004 | 0.796 |
+| propositional | +0.003 | +0.012 | +0.001 | +0.014 | +0.008 | +0.003 | 0.325 |
+| shuffled_order | +0.007 | +0.003 | +0.011 | +0.019 | -0.011 | +0.016 | 0.013 |
 
 ## 4. RQ1 — does brain-similarity *cause* better generalization?
 
@@ -117,7 +128,7 @@ Regularizers lift every variant a little; real structure lifts the variants that
 | A|structured | 50 | +0.614 | +0.152 [+0.128, +0.182] | +0.0933 [+0.0771, +0.1113] | -0.010 [-0.032, +0.008] | +0.80 (0.000) | +0.80 |
 | A|hollow | 50 | +0.241 | -0.288 [-0.553, -0.080] | -0.0694 [-0.1272, -0.0194] | -0.052 [-0.106, +0.002] | -0.43 (0.002) | -0.43 |
 | B|planted | 50 | +0.332 | +0.322 [+0.197, +0.518] | +0.1068 [+0.0442, +0.1528] | -0.108 [-0.177, -0.038] | +0.54 (0.000) | +0.54 |
-| B|real_dr | 50 | +0.567 | -0.004 [-0.086, +0.166] | -0.0024 [-0.0539, +0.0760] | -0.031 [-0.097, +0.014] | -0.01 (0.942) | -0.01 |
+| B|real_dr | 90 | +0.726 | +0.034 [-0.036, +0.116] | +0.0249 [-0.0261, +0.0862] | -0.033 [-0.114, +0.036] | +0.09 (0.377) | +0.09 |
 
 ## 5. RQ2 — which brain regions drive the gain?
 
@@ -156,4 +167,4 @@ Regularizers lift every variant a little; real structure lifts the variants that
 
 | student | arm | R0 | R1 | R2 | R3 | R4 | R5 | knockout | KO_oracle | seeds | p(R5>R3) | KO closes gap | verdict | pre-reg rule |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| GRU | real fMRI (HCP, MD) | +0.013 | +0.015 | +0.015 | +0.011 | +0.012 | +0.011 | +0.007 | – | 10 | 0.477 | – | **REGULARIZER** | REGULARIZER |
+| GRU | real fMRI (HCP, MD) | +0.012 | +0.014 | +0.014 | +0.011 | +0.011 | +0.009 | +0.009 | – | 30 | 0.705 | – | **REGULARIZER** | REGULARIZER |
