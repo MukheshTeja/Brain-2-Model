@@ -16,6 +16,8 @@ import time
 from dataclasses import replace
 from pathlib import Path
 
+import numpy as np
+
 from cdb2m.experiments import phase_a, phase_b
 from cdb2m.experiments.runner import default_workers, parallel_map, run_jobs
 
@@ -67,7 +69,8 @@ def main() -> None:
         seeds = sorted(set(sb.seeds) | set(sb.seeds_other_students) | set(sb.rq2_seeds))
         ctxs = parallel_map(phase_b.build_context, [(sb, s, shared) for s in seeds], args.workers)
         contexts = {c["seed"]: c for c in ctxs}
-        rel = {k: float(sum(c["reliability"][k] for c in ctxs) / len(ctxs)) for k in ctxs[0]["reliability"]}
+        keys = sorted({k for c in ctxs for k in c["reliability"]})  # coalition keys exist only for RQ2 seeds
+        rel = {k: float(np.mean([c["reliability"][k] for c in ctxs if k in c["reliability"]])) for k in keys}
         meta = {"reliability": rel, "realsnr_noise_scale": shared.get("realsnr_noise", {})}
         (out / f"phaseB{tag}_meta.json").write_text(json.dumps(meta, indent=1))
         print(f"  built {len(contexts)} seed contexts in {(time.time() - t1) / 60:.1f} min", flush=True)

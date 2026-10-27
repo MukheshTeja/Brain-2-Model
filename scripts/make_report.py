@@ -188,16 +188,20 @@ def main():
         return r.iloc[0] if len(r) else None
 
     def ladder_table(rows):
-        hdr = "| student | arm | " + " | ".join(r for r in RUNG_ORDER) + " | d(R5−R4) | p(R5>R3) | verdict |"
-        sep = "|" + "---|" * (len(RUNG_ORDER) + 5)
+        hdr = "| student | arm | " + " | ".join(r for r in RUNG_ORDER) + " | d(R5−R4) | p(R5>R3) | KO closes gap | verdict |"
+        sep = "|" + "---|" * (len(RUNG_ORDER) + 6)
         body = []
         for r in rows:
             if r is None:
                 continue
             cells = " | ".join(fmt(r[k]) for k in RUNG_ORDER)
             p = r["p_R5>R3"]
+            gap = r["R5"] - r["R3"]
+            closed = "–" if not (gap > 0.01) else f"{(r['R5'] - r['knockout']) / gap:.0%}"
+            if gap > 0.01 and not np.isnan(r.get("KO_oracle", np.nan)):
+                closed += f" (oracle {(r['R5'] - r['KO_oracle']) / gap:.0%})"
             body.append(f"| {STUDENT_NAME.get(r.student, r.student)} | {ARM_NAME.get(r.arm, r.arm)} | {cells} | "
-                        f"{r.d_R5_R4:.2f} | {'–' if p is None or np.isnan(p) else f'{p:.3f}'} | **{r.verdict}** |")
+                        f"{r.d_R5_R4:.2f} | {'–' if p is None or np.isnan(p) else f'{p:.3f}'} | {closed} | **{r.verdict}** |")
         return "\n".join([hdr, sep] + body)
 
     students = [s for s in ("gru", "transformer", "ppo") if s in set(zg.student)]
@@ -273,6 +277,10 @@ def main():
         checks.append((s, ok_s, ok_h))
         L(f"- **{STUDENT_NAME[s]}** — structured flagged as transfer: {'✅' if ok_s else '❌'} · hollow NOT flagged: {'✅' if ok_h else '❌'}")
     L("")
+    L("*KO closes gap* = (R5 − knockout) / (R5 − R3): the share of the brain-specific gain that erasing the task "
+      "variables removes (100% = falls exactly to R3); the oracle erases the known generative subspace exactly. "
+      "When even the oracle overshoots or undershoots R3, the knockout ≈ R3 clause is limited by how that student "
+      "reacts to R3 itself, not by incomplete erasure.\n")
 
     L("## 2. Phase B — real fMRI (ds003076 deductive reasoning)\n")
     if meta.get("reliability"):

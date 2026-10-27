@@ -1,0 +1,32 @@
+{
+ "reliability": {
+  "coal:DR+LANG|syllogism": 0.0298335871287718,
+  "coal:DR+LANG|transitive": 0.08614198878848539,
+  "coal:DR+MD+LANG|syllogism": 0.036190200399977106,
+  "coal:DR+MD+LANG|transitive": 0.09426868793811631,
+  "coal:DR+MD|syllogism": 0.006050967829946557,
+  "coal:DR+MD|transitive": 0.10084611686426434,
+  "coal:DR|syllogism": -0.038215811796169515,
+  "coal:DR|transitive": 0.0461178935593278,
+  "coal:LANG|syllogism": 0.05652679936213443,
+  "coal:LANG|transitive": 0.10053932039328342,
+  "coal:MD+LANG|syllogism": 0.06220964228886906,
+  "coal:MD+LANG|transitive": 0.07191058350602228,
+  "coal:MD|syllogism": 0.02216942925497088,
+  "coal:MD|transitive": 0.06066572659062738,
+  "hcp|list1": 0.3462021188231147,
+  "hcp|list2": 0.16726389106405568,
+  "hollow|syllogism": 0.11552905745124616,
+  "hollow|transitive": 0.17045180265886478,
+  "planted_realsnr|syllogism": 0.061038364543176904,
+  "planted_realsnr|transitive": 0.07437319838829622,
+  "planted|syllogism": 0.9533138355755689,
+  "planted|transitive": 0.9570561017744478,
+  "real_dr|syllogism": 0.03545949635156333,
+  "real_dr|transitive": 0.09938893681771974
+ },
+ "realsnr_noise_scale": {
+  "syllogism": 10.0,
+  "transitive": 9.0
+ }
+}
