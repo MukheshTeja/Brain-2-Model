@@ -14,7 +14,7 @@ from typing import Callable
 
 from nullladder.shapley import exact_shapley
 
-REGIONS = ("IFG", "MFG", "parietal", "basal_ganglia")
+REGIONS = ("IFG", "MFG", "parietal", "basal_ganglia")  # raw-BOLD path; real-data default uses cdb2m.analysis.core.region_shapley over DR/MD/LANG
 
 
 def region_shapley(value_fn: Callable[[frozenset], float]) -> dict[str, float]:

@@ -11,3 +11,6 @@ __all__ = [
     "CKAAlignmentLoss",
     "RSAAlignmentLoss",
 ]
+from .infonce import InfoNCEAlignmentLoss  # noqa: E402
+
+__all__.append("InfoNCEAlignmentLoss")

@@ -16,3 +16,10 @@ results/*.png
 results/*_headroom.csv
 
 .DS_Store
+
+# downloaded datasets (re-create with: python -m scripts.download_data)
+data
+data/
+# run logs
+results/log_*.txt
+results/report*/runs_zero_shot_gain.csv
