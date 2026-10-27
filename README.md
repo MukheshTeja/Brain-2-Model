@@ -18,12 +18,13 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu   # ~200 MB i
 pip install -e .
 
 python -m scripts.download_data          # ~24 MB, pinned commits, writes data/MANIFEST.json (sha256)
-python -m scripts.run_pipeline --preset quick   # ~10-15 min on an 8-core laptop
+python -m scripts.run_pipeline --preset quick   # ~15-20 min on an 8-core laptop
 python -m scripts.make_report --preset quick    # -> results/report_quick/REPORT.md + figures
 
-python -m scripts.run_pipeline --preset full    # deck protocol: 10 seeds (5 for Transformer/PPO), ~30-45 min
+python -m scripts.run_pipeline --preset full    # deck protocol: 10 seeds (5 Transformer/PPO, 30 GRU on real data), ~4.7 CPU-hours
+                                                #   = ~50 min with 6 workers
 python -m scripts.make_report                   # -> results/report/REPORT.md
-pytest                                          # 55 unit tests, ~30 s
+pytest                                          # 56 unit tests, ~30 s
 ```
 
 Footprint: ~24 MB of data, <1 MB per results CSV, roughly 0.35 GB RAM per worker
@@ -52,9 +53,29 @@ The released betas are exactly the inputs to Xiao et al.'s published analyses.
 | 4. Zero-shot tests | longer sequences, fixed goal cycles, swapped targets, new distractors | 4/5/6 premises, shuffled premise order, propositional logic (far transfer) |
 | 5. Analysis | verdict rule, fingerprints, RQ1 mediation (α as randomised dose), RQ2 exact Shapley over 4 regions with known content, RQ3 per architecture | same, RQ2 over DR / MD / language networks, plus HCP replication |
 
-**Verdict rule:** a slice counts as *genuine transfer* only if R5 beats every rung
-and the knockout falls to R3. It counts as a *regularizer* if R5 ≈ R3 (TOST).
-Thresholds are pre-registered in `configs/phaseA_thresholds.yaml`.
+**Verdict rule** (deck slide 5), tested inferentially across seeds: *genuine
+transfer* iff R5 > every rung R0–R4 (Holm-corrected paired tests) and the knockout
+falls to within one smallest-effect-of-interest (SESOI) of R3. *Regularizer* iff R5
+is not above R3 and is TOST-equivalent to it. SESOI: Phase A 0.05 (pre-registered in
+`configs/phaseA_thresholds.yaml`), Phase B 0.02 (set from the planted control). The
+scaffold's original mean-based rule is reported alongside it; it fails the Phase B
+hollow control, which is why the inferential version is used for headlines.
+
+## Results (full preset): see `results/report/REPORT.md`
+
+| Structure-specific gain R5 − R3 (GRU, 95% CI) | |
+|---|---|
+| Phase A structured brain (known structure) | +0.059 [+0.053, +0.066]: **genuine transfer** ✅ |
+| Phase A hollow brain (no structure) | −0.001 [−0.008, +0.007]: **regularizer** ✅ |
+| Phase B planted (known structure) | +0.035 [+0.023, +0.046]: **genuine transfer** ✅ |
+| Phase B planted at real-fMRI SNR (power check) | +0.048 [+0.042, +0.055] |
+| **ds003076 real fMRI (deductive-reasoning network)** | **+0.007 [−0.000, +0.014]**: inconclusive, at most ~29% of what genuine structure gives at this SNR, and below the SESOI |
+| **HCP relational real fMRI (MD network)** | **−0.002 [−0.009, +0.005]**: **regularizer** |
+
+The test is validated (it flags planted structure and rejects matched noise in both
+phases, even at the real data's SNR). On real fMRI, B2M-style gains are explained by
+the brain signal's statistics, not by transferred task structure: **H2 (regularizer)**
+for HCP, and at most a negligible structure component for ds003076.
 
 ## Layout
 

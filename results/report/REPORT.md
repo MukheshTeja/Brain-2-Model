@@ -1,5 +1,23 @@
 # CD-B2M results
 
+## Summary (GRU, the student whose sandbox checks pass in both phases)
+
+Structure-specific gain = zero-shot gain with the brain teacher (R5) minus with its max-entropy null R3, which keeps all of the brain signal's 1st/2nd-order statistics but none of its task pairing (mean, 95% CI):
+
+| teacher signal | R5 − R3 | verdict |
+|---|---|---|
+| Phase A structured brain (known structure) | +0.059 [+0.053, +0.066], n = 10 | GENUINE TRANSFER |
+| Phase A hollow brain (known: none) | -0.001 [-0.008, +0.007], n = 10 | REGULARIZER |
+| Phase B planted (known structure) | +0.035 [+0.023, +0.046], n = 10 | GENUINE TRANSFER |
+| Phase B planted at real-fMRI SNR (power check) | +0.048 [+0.042, +0.055], n = 30 | power arm (R0/R3/R5 only) |
+| **ds003076 real fMRI, DR network** | +0.007 [-0.000, +0.014], n = 30 | INCONCLUSIVE |
+| **HCP relational real fMRI, MD network** | -0.002 [-0.009, +0.005], n = 30 | REGULARIZER |
+
+- The test works: it flags known structure and rejects matched-statistics noise in both phases.
+- At the real data's own signal-to-noise, genuine structure would give ≈ +0.048; real deductive-reasoning fMRI gives +0.007 (upper 95% bound +0.014), i.e. at most 29% of what real structure would produce, and below the pre-set smallest effect of interest (0.02).
+- HCP relational fMRI: aligning to the real brain helps exactly as much as aligning to its statistics-matched null (R5 ≈ R3 ≈ R0 ≈ +0.01): a **regularizer** effect.
+- RQ1: brain-similarity mediates the gain only where structure was planted (ACME > 0); on real fMRI the mediation CI includes 0. RQ2 and RQ3: see sections 5–6.
+
 Preset: `full` · transfer strength α = 0.2 for the ladder · every score is a **zero-shot gain**: accuracy on unseen task variants minus the paired no-transfer (α = 0) run with the same seed, data stream and evaluation sets. Ladder cells are means across seeds.
 
 **Verdict rule** (deck slide 5: genuine transfer only if R5 beats every rung on zero-shot tests *and* the knockout falls to R3), tested inferentially across seeds:
