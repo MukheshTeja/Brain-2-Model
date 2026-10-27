@@ -52,6 +52,9 @@ class PhaseBSettings:
     dose_alphas: tuple[float, ...] = (0.05, 0.1, 0.2, 0.4)
     dose_rungs: tuple[str, ...] = ("R0", "R3", "R5")
     rq2_seeds: tuple[int, ...] = tuple(range(5))
+    # follow-up seed extension (GRU only, real-data ladders + power arm): added after the
+    # 10-seed run left real_dr R5-R3 neither significant nor equivalent within the SESOI.
+    followup_seeds: tuple[int, ...] = tuple(range(10, 30))
     run_hcp: bool = True
     run_power: bool = True
     n_steps: int = 800
@@ -268,6 +271,21 @@ def make_jobs(s: PhaseBSettings, contexts: dict[int, dict]) -> list[dict]:
                 add("ds003076", "rq2", "gru", coal, rung, s.alpha_main, seed, pick(d, rung), tg(d, rung))
     if s.run_hcp:
         for seed in s.seeds:
+            h = contexts[seed]["hcp"]
+            add("hcp", "main", "gru", "all", "baseline", 0.0, seed, None, {"hcp": {"R5": pick(h, "R5"), "R3": pick(h, "R3")}})
+            for rung in h["list1"]:
+                add("hcp", "main", "gru", "hcp", rung, s.alpha_main, seed, pick(h, rung), tg(h, rung))
+    for seed in s.followup_seeds:  # GRU follow-up: real-data ladders only (+ power arm, + HCP)
+        arms = contexts[seed]["arms"]
+        add("ds003076", "main", "gru", "all", "baseline", 0.0, seed, None,
+            {a: {"R5": pick(arms[a], "R5"), "R3": pick(arms[a], "R3")} for a in ("real_dr", "planted_realsnr") if a in arms})
+        for rung in arms["real_dr"]["syllogism"]:
+            add("ds003076", "main", "gru", "real_dr", rung, s.alpha_main, seed, pick(arms["real_dr"], rung), tg(arms["real_dr"], rung))
+        if s.run_power:
+            for rung in s.dose_rungs:
+                add("ds003076", "main", "gru", "planted_realsnr", rung, s.alpha_main, seed,
+                    pick(arms["planted_realsnr"], rung), tg(arms["planted_realsnr"], rung))
+        if s.run_hcp:
             h = contexts[seed]["hcp"]
             add("hcp", "main", "gru", "all", "baseline", 0.0, seed, None, {"hcp": {"R5": pick(h, "R5"), "R3": pick(h, "R3")}})
             for rung in h["list1"]:

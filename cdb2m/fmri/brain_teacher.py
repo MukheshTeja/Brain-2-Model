@@ -49,12 +49,25 @@ class SubjectEmbedder:
 
 
 def subject_rungs(x: np.ndarray, design: np.ndarray, seed: int, n_comp: int = 20, mixing=None) -> dict[str, np.ndarray]:
+    """Rungs are generated where their claimed statistics are meaningful, then
+    all passed through the SAME frozen subject embedder:
+      R0, R1 in VOXEL space: per-voxel Gaussian / per-voxel independent phase
+         shuffle genuinely destroy cross-voxel (zero-lag) covariance. (Done on
+         PCA scores they would not: scores are already decorrelated, so R0/R1
+         would silently keep the covariance and R2 would equal R1.)
+      R2 in the embedder's decorrelated basis: independent phase shuffle of
+         uncorrelated components keeps each component's spectrum and the full
+         zero-lag covariance of the retained subspace, but no lagged
+         cross-covariance.
+      R3 multivariate phase randomisation (basis-invariant): all 1st/2nd-order
+         statistics incl. lagged cross-covariance.
+      R4 real responses, deranged problem pairing; R5 real; knockout = LEACE."""
     emb = SubjectEmbedder(x, n_comp)
     s = emb(x)
-    out = {}
-    for name, sur in (("R0", GaussianSurrogate()), ("R1", PhaseShuffleSurrogate()),
-                      ("R2", CovarianceMatchedSurrogate()), ("R3", MaxEntropySurrogate())):
-        out[name] = sur.fit(s).generate(seed=seed)
+    out = {"R0": emb(GaussianSurrogate().fit(x).generate(seed=seed)),
+           "R1": emb(PhaseShuffleSurrogate().fit(x).generate(seed=seed)),
+           "R2": CovarianceMatchedSurrogate().fit(s).generate(seed=seed),
+           "R3": MaxEntropySurrogate().fit(s).generate(seed=seed)}
     out["R4"] = s[_derangement(s.shape[0], np.random.default_rng(seed))]
     out["R5"] = s
     out["knockout"] = StructureKnockout().fit(s, design).apply(s)

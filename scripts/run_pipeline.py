@@ -28,12 +28,12 @@ def presets(name: str):
         a = replace(a, seeds=tuple(range(4)), seeds_other_students=tuple(range(3)), rq2_seeds=tuple(range(2)),
                     dose_alphas=(0.1, 0.2, 0.4))
         b = replace(b, seeds=tuple(range(4)), seeds_other_students=tuple(range(3)), rq2_seeds=tuple(range(2)),
-                    dose_alphas=(0.1, 0.2, 0.4), n_eval=600)
+                    dose_alphas=(0.1, 0.2, 0.4), n_eval=600, followup_seeds=())
     elif name == "smoke":  # seconds-scale correctness check
         a = replace(a, seeds=(0,), seeds_other_students=(0,), rq2_seeds=(0,), dose_alphas=(0.2,), n_train_epochs=20,
                     teacher_train_steps=30, n_eval_sequences=20)
         b = replace(b, seeds=(0,), seeds_other_students=(0,), rq2_seeds=(0,), dose_alphas=(0.2,), n_steps=20,
-                    teacher_steps=30, n_eval=50)
+                    teacher_steps=30, n_eval=50, followup_seeds=())
     elif name != "full":
         raise ValueError(name)
     return a, b
@@ -66,7 +66,7 @@ def main() -> None:
         print("=== Phase B: real fMRI ===", flush=True)
         t1 = time.time()
         shared = phase_b.shared_context(sb)
-        seeds = sorted(set(sb.seeds) | set(sb.seeds_other_students) | set(sb.rq2_seeds))
+        seeds = sorted(set(sb.seeds) | set(sb.seeds_other_students) | set(sb.rq2_seeds) | set(sb.followup_seeds))
         ctxs = parallel_map(phase_b.build_context, [(sb, s, shared) for s in seeds], args.workers)
         contexts = {c["seed"]: c for c in ctxs}
         keys = sorted({k for c in ctxs for k in c["reliability"]})  # coalition keys exist only for RQ2 seeds

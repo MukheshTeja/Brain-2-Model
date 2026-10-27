@@ -148,3 +148,18 @@ def test_classical_mds_recovers_distances():
     emb = classical_mds(d, 3)
     d2 = np.linalg.norm(emb[:, None] - emb[None], axis=-1)
     assert np.corrcoef(d[np.triu_indices(20, 1)], d2[np.triu_indices(20, 1)])[0, 1] > 0.9
+
+
+def test_real_data_rungs_are_graded_not_degenerate():
+    """Regression test: R0/R1 built on decorrelated PCA scores silently kept the
+    zero-lag covariance and made R2 identical to R1. They must be distinct, and
+    R0/R1 must destroy covariance while R3/R4 keep it exactly."""
+    from nullladder.stats import covariance_match_error
+
+    betas, _ = _toy_betas()
+    r = subject_rungs(betas[0], np.eye(2)[np.arange(36) % 2], seed=0)
+    assert not np.allclose(r["R1"], r["R2"])
+    err = {k: covariance_match_error(r["R5"], r[k]) for k in ("R0", "R1", "R2", "R3", "R4")}
+    assert err["R0"] > 0.6 and err["R1"] > 0.6
+    assert err["R2"] < err["R1"]
+    assert err["R3"] < 1e-6 and err["R4"] < 1e-6

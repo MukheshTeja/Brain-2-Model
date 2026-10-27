@@ -212,3 +212,57 @@ def region_shapley(runs: pd.DataFrame, n_boot: int = 1000, seed: int = 0) -> pd.
         rows.append({"region": p, "shapley_gain": raw[p], "gain_ci": tuple(np.percentile(br[p], [2.5, 97.5])),
                      "shapley_structure": st[p], "structure_ci": tuple(np.percentile(bs[p], [2.5, 97.5]))})
     return pd.DataFrame(rows).sort_values("shapley_structure", ascending=False)
+
+
+def holm(pvals: dict[str, float]) -> dict[str, float]:
+    items = sorted(((p if not np.isnan(p) else 1.0), k) for k, p in pvals.items())
+    m, out, running = len(items), {}, 0.0
+    for i, (p, k) in enumerate(items):
+        running = max(running, min(1.0, (m - i) * p))
+        out[k] = running
+    return out
+
+
+def verdict_inferential(runs: pd.DataFrame, sesoi: float, alpha: float = 0.05) -> Verdict:
+    """Inferential version of the deck's verdict rule (used for the headline
+    verdicts after the mean-based pre-registered rule failed the Phase B
+    hollow control -- see REPORT.md):
+
+    clause 1  R5 > R0..R4: one-sided paired t-tests across seeds, Holm-corrected.
+    clause 2  knockout falls to R3: knockout < R5 (one-sided paired p < alpha)
+              AND knockout is not more than `sesoi` above R3 (one-sided test of
+              H0: KO - R3 >= sesoi rejected at alpha).
+    regularizer  R5 not significantly above R3 AND R5 TOST-equivalent to R3
+              within +/- sesoi.
+    `sesoi` = smallest effect size of interest, fixed per phase from controls
+    (Phase A: the pre-registered 0.05; Phase B: 0.02 ~ half the planted
+    brain's structure-specific gain)."""
+    means = runs.groupby("rung")["score"].mean()
+    p_raw = {r: p_greater(*paired(runs, "R5", r)) for r in LADDER[:-1]}
+    p_adj = holm(p_raw)
+    clause1 = all(p_adj[r] < alpha for r in p_adj)
+    x5, xk = paired(runs, "R5", "knockout")
+    k, r3 = paired(runs, "knockout", "R3")
+    clause2 = False
+    p_ko_below = p_greater(x5, xk) if len(x5) > 1 else np.nan
+    p_ko_near = np.nan
+    if len(k) > 1:
+        d = k - r3
+        se = d.std(ddof=1) / np.sqrt(len(d)) + 1e-12
+        p_ko_near = float(stats.t.cdf((d.mean() - sesoi) / se, len(d) - 1))  # H0: diff >= sesoi
+        clause2 = bool(p_ko_below < alpha and p_ko_near < alpha)
+    x5b, x3 = paired(runs, "R5", "R3")
+    t53 = tost_equivalence(x5b, x3, margin=sesoi) if len(x5b) > 1 else None
+    reg = bool(t53 is not None and t53.equivalent and not (p_raw["R3"] < alpha))
+    if clause1 and clause2:
+        label = "GENUINE TRANSFER"
+    elif reg:
+        label = "REGULARIZER"
+    elif clause1:
+        label = "TRANSFER (knockout incomplete)"
+    else:
+        label = "INCONCLUSIVE"
+    det = {"means": means.to_dict(), "p_holm_R5_gt": p_adj, "p_raw_R5_gt": p_raw, "p_ko_below_R5": p_ko_below,
+           "p_ko_within_sesoi_of_R3": p_ko_near, "tost_r5_r3": (t53.mean_diff, t53.p_tost) if t53 else None,
+           "sesoi": sesoi, "d_R5_R4": cohens_d(*paired(runs, "R5", "R4"))}
+    return Verdict(label, clause1, clause2, reg, False, det)

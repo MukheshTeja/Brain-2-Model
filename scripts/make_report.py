@@ -19,7 +19,9 @@ import pandas as pd  # noqa: E402
 from omegaconf import OmegaConf  # noqa: E402
 
 from cdb2m.analysis.core import (add_gains, fingerprint, mediation, paired, region_shapley,  # noqa: E402
-                                 verdict, zero_shot)
+                                 verdict, verdict_inferential, zero_shot)
+
+SESOI = {"A": 0.05, "B": 0.02}  # smallest effect of interest per phase (A: pre-registered margin; B: ~half the planted structure gain)
 
 RUNG_ORDER = ["R0", "R1", "R2", "R3", "R4", "R5", "knockout", "KO_oracle"]
 RUNG_LABEL = {"R0": "R0\nGaussian", "R1": "R1\nphase", "R2": "R2\ncov", "R3": "R3\nmax-ent", "R4": "R4\nshuffled",
@@ -171,15 +173,21 @@ def main():
         runs = slice_runs(phase, dataset, student, arm)
         if runs.rung.nunique() < 6:
             continue
-        v = verdict(runs, thr)
+        v = verdict(runs, thr)  # pre-registered, mean-based
+        vi = verdict_inferential(runs, SESOI[phase])  # headline
         m = v.details["means"]
+        x5, x3 = paired(runs, "R5", "R3")
+        dd = x5 - x3
+        se = dd.std(ddof=1) / np.sqrt(len(dd)) if len(dd) > 1 else np.nan
         vt.append({"phase": phase, "dataset": dataset, "student": student, "arm": arm, "n_seeds": runs.seed.nunique(),
                    **{r: m.get(r, np.nan) for r in RUNG_ORDER}, "d_R5_R4": v.details["d_R5_R4"],
-                   "p_R5>R3": v.details["p_R5_gt"].get("R3"), "KO≈R3": v.clause2_knockout_eq_r3,
-                   "R5≈R3": v.r5_eq_r3, "R5≈R4": v.r5_eq_r4, "verdict": v.label})
-        V[f"{phase}|{dataset}|{student}|{arm}"] = {"verdict": v.label, **{k: (list(x) if isinstance(x, tuple) else x)
-                                                                          for k, x in v.details.items() if k != "p_R5_gt"},
-                                                   "p_R5_gt": v.details["p_R5_gt"]}
+                   "p_R5>R3": v.details["p_R5_gt"].get("R3"), "p_holm_max": max(vi.details["p_holm_R5_gt"].values()),
+                   "R5-R3": dd.mean(), "R5-R3_ci_lo": dd.mean() - 1.96 * se, "R5-R3_ci_hi": dd.mean() + 1.96 * se,
+                   "verdict": vi.label, "verdict_prereg": v.label})
+        V[f"{phase}|{dataset}|{student}|{arm}"] = {
+            "verdict": vi.label, "verdict_prereg": v.label,
+            "inferential": {k: (list(x) if isinstance(x, tuple) else x) for k, x in vi.details.items()},
+            "prereg": {k: (list(x) if isinstance(x, tuple) else x) for k, x in v.details.items()}}
     vt = pd.DataFrame(vt)
     vt.to_csv(out / "verdicts.csv", index=False)
 
@@ -188,8 +196,8 @@ def main():
         return r.iloc[0] if len(r) else None
 
     def ladder_table(rows):
-        hdr = "| student | arm | " + " | ".join(r for r in RUNG_ORDER) + " | d(R5−R4) | p(R5>R3) | KO closes gap | verdict |"
-        sep = "|" + "---|" * (len(RUNG_ORDER) + 6)
+        hdr = "| student | arm | " + " | ".join(r for r in RUNG_ORDER) + " | seeds | p(R5>R3) | KO closes gap | verdict | pre-reg rule |"
+        sep = "|" + "---|" * (len(RUNG_ORDER) + 7)
         body = []
         for r in rows:
             if r is None:
@@ -201,7 +209,7 @@ def main():
             if gap > 0.01 and not np.isnan(r.get("KO_oracle", np.nan)):
                 closed += f" (oracle {(r['R5'] - r['KO_oracle']) / gap:.0%})"
             body.append(f"| {STUDENT_NAME.get(r.student, r.student)} | {ARM_NAME.get(r.arm, r.arm)} | {cells} | "
-                        f"{r.d_R5_R4:.2f} | {'–' if p is None or np.isnan(p) else f'{p:.3f}'} | {closed} | **{r.verdict}** |")
+                        f"{r.n_seeds} | {'–' if p is None or np.isnan(p) else f'{p:.3f}'} | {closed} | **{r.verdict}** | {r.verdict_prereg} |")
         return "\n".join([hdr, sep] + body)
 
     students = [s for s in ("gru", "transformer", "ppo") if s in set(zg.student)]
@@ -255,12 +263,25 @@ def main():
 
     # ------------------------------------------------------------- REPORT.md
     L("# CD-B2M results\n")
-    L(f"Preset: `{args.preset}` · transfer strength α = {alpha_main} for the ladder · scores are **zero-shot gains**: "
-      "accuracy on unseen task variants minus the paired no-transfer (α = 0) run with the same seed. "
-      "Verdict rule (deck slide 5, thresholds pre-registered in `configs/phaseA_thresholds.yaml`): **GENUINE TRANSFER** "
-      "iff R5 beats every rung R0–R4 (R5−R4 paired Cohen's d > "
-      f"{thr['min_effect_size_r5_vs_r4']}) **and** the knockout is TOST-equivalent to R3 (±{thr['knockout_vs_r3_margin']}); "
-      f"**REGULARIZER** iff R5 is TOST-equivalent to R3 (±{thr['knockout_vs_r3_margin']}); otherwise **INCONCLUSIVE**.\n")
+    L(f"Preset: `{args.preset}` · transfer strength α = {alpha_main} for the ladder · every score is a **zero-shot gain**: "
+      "accuracy on unseen task variants minus the paired no-transfer (α = 0) run with the same seed, data stream and "
+      "evaluation sets. Ladder cells are means across seeds.\n")
+    L("**Verdict rule** (deck slide 5: genuine transfer only if R5 beats every rung on zero-shot tests *and* the knockout "
+      "falls to R3), tested inferentially across seeds:\n")
+    L("- **GENUINE TRANSFER**: R5 > each of R0–R4 (one-sided paired t-tests, Holm-corrected, α = 0.05) **and** the "
+      "knockout is significantly below R5 **and** no more than one SESOI above R3 (one-sided test).")
+    L("- **REGULARIZER**: R5 is not significantly above R3 **and** TOST-equivalent to R3 within ± SESOI.")
+    L("- **INCONCLUSIVE**: neither; **TRANSFER (knockout incomplete)**: clause 1 only.")
+    L(f"- SESOI (smallest effect of interest): Phase A {SESOI['A']} (= the pre-registered margin in "
+      f"`configs/phaseA_thresholds.yaml`), Phase B {SESOI['B']} (≈ half the planted brain's structure-specific gain; "
+      "fixed from the controls, not from real data).\n")
+    L("The *pre-reg rule* column applies the scaffold's original mean-based thresholds (R5 mean above every rung, "
+      f"d(R5−R4) > {thr['min_effect_size_r5_vs_r4']}, ±{thr['knockout_vs_r3_margin']} TOST margins). It passes the Phase A "
+      "sandbox but **fails the Phase B sandbox check**: it flags the task-free *hollow* control as genuine transfer, "
+      "because Phase B effects (~0.01–0.05) are far below its 0.05 margins and mean ordering alone is noise-driven. "
+      "That failure is why the headline verdicts use the inferential rule; both are shown.\n")
+    L("**An instrument is only trusted where its sandbox check passes** (structured/planted → GENUINE TRANSFER, "
+      "hollow → not transfer).\n")
 
     # sandbox check
     def lab(phase, dataset, st, arm):
@@ -275,7 +296,7 @@ def main():
         ok_s = lab("A", "sandbox_main", s, "structured") == "GENUINE TRANSFER"
         ok_h = lab("A", "sandbox_main", s, "hollow") not in ("GENUINE TRANSFER", "TRANSFER (knockout incomplete)", None)
         checks.append((s, ok_s, ok_h))
-        L(f"- **{STUDENT_NAME[s]}** — structured flagged as transfer: {'✅' if ok_s else '❌'} · hollow NOT flagged: {'✅' if ok_h else '❌'}")
+        L(f"- **{STUDENT_NAME[s]}**: structured flagged as transfer {'✅' if ok_s else '❌'} · hollow not flagged {'✅' if ok_h else '❌'}")
     L("")
     L("*KO closes gap* = (R5 − knockout) / (R5 − R3): the share of the brain-specific gain that erasing the task "
       "variables removes (100% = falls exactly to R3); the oracle erases the known generative subspace exactly. "
@@ -299,6 +320,31 @@ def main():
         L("")
     L("![Phase B ladder](fig2_phaseB_ladder.png)\n")
     L(ladder_table([vrow("B", "ds003076", s, a) for s in students for a in ("planted", "hollow", "real_dr")]) + "\n")
+    L("Phase B sandbox check (planted → GENUINE TRANSFER, hollow → not transfer):\n")
+    for s in students:
+        ok_s = lab("B", "ds003076", s, "planted") == "GENUINE TRANSFER"
+        ok_h = lab("B", "ds003076", s, "hollow") not in ("GENUINE TRANSFER", "TRANSFER (knockout incomplete)", None)
+        L(f"- **{STUDENT_NAME[s]}**: planted flagged {'✅' if ok_s else '❌'} · hollow not flagged {'✅' if ok_h else '❌'}"
+          + ("" if ok_s and ok_h else " → this student's real-data verdict is **not interpretable**"))
+    L("")
+    fu = zg[(zg.phase == "B") & (zg.student == "gru") & (zg.alpha == alpha_main) & zg.arm.isin(["real_dr", "hcp", "planted_realsnr"])]
+    if fu.seed.max() >= 10:
+        L("**Follow-up seed extension (GRU).** After the 10-seed run left real-data R5−R3 neither significant nor "
+          "equivalent, 20 more seeds were run for the real-data ladders, the HCP ladder and the power arm only "
+          "(declared here as a sequential extension; first-10-seed results shown for comparison):\n")
+        L("| slice | seeds | R5−R3 [95% CI] | p(R5>R3) |\n|---|---|---|---|")
+        for arm in ("real_dr", "planted_realsnr", "hcp"):
+            for lim in (10, 10 ** 6):
+                g = fu[(fu.arm == arm) & (fu.seed < lim)]
+                a5, a3 = paired(g, "R5", "R3")
+                if len(a5) < 2:
+                    continue
+                dd = a5 - a3
+                se = dd.std(ddof=1) / np.sqrt(len(dd))
+                from scipy import stats as _st
+                pv = _st.ttest_rel(a5, a3, alternative="greater").pvalue
+                L(f"| {ARM_NAME[arm]} | {len(dd)} | {dd.mean():+.4f} [{dd.mean() - 1.96 * se:+.4f}, {dd.mean() + 1.96 * se:+.4f}] | {pv:.4f} |")
+        L("")
     pw = zg[(zg.arm == "planted_realsnr") & (zg.alpha == alpha_main)]
     if len(pw):
         x5, x3 = paired(pw, "R5", "R3")
