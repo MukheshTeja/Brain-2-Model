@@ -1,0 +1,27 @@
+                                            file  original_items  evaluated_items  unique_symbolic_inputs  excluded_items
+              deductive_reasoning_data_test.json            1600              163                     160            1437
+    deductive_reasoning_data_test_4premises.json             800              800                     798               0
+    deductive_reasoning_data_test_5premises.json             160              160                     160               0
+    deductive_reasoning_data_test_6premises.json              80               80                      80               0
+deductive_reasoning_data_test_propositional.json             600              400                     244             200
+arm       dataset                                    
+R3        deductive_reasoning_data_test                  1.00000
+          deductive_reasoning_data_test_4premises        0.97500
+          deductive_reasoning_data_test_5premises        0.97500
+          deductive_reasoning_data_test_6premises        0.97500
+          deductive_reasoning_data_test_propositional    0.50000
+R5        deductive_reasoning_data_test                  1.00000
+          deductive_reasoning_data_test_4premises        1.00000
+          deductive_reasoning_data_test_5premises        0.95000
+          deductive_reasoning_data_test_6premises        0.95000
+          deductive_reasoning_data_test_propositional    0.50000
+baseline  deductive_reasoning_data_test                  1.00000
+          deductive_reasoning_data_test_4premises        1.00000
+          deductive_reasoning_data_test_5premises        1.00000
+          deductive_reasoning_data_test_6premises        1.00000
+          deductive_reasoning_data_test_propositional    0.50000
+legacy    deductive_reasoning_data_test                  0.81227
+          deductive_reasoning_data_test_4premises        0.80125
+          deductive_reasoning_data_test_5premises        0.82000
+          deductive_reasoning_data_test_6premises        0.79000
+          deductive_reasoning_data_test_propositional    0.48200

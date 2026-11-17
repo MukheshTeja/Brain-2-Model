@@ -1,0 +1,120 @@
+{
+  "spec": {
+    "id": "gru32_legacy_baseline_s23",
+    "model": "gru32",
+    "seed": 23,
+    "rung": "baseline",
+    "loss": "linear_mse",
+    "alpha": 0.2,
+    "legacy": true,
+    "steps": 1000,
+    "n_eval": 1000,
+    "data_dir": "data",
+    "out": "results/laptop",
+    "stage": "evaluate"
+  },
+  "history": [
+    {
+      "step": 100,
+      "train_ce": 0.5272774696350098,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.5104166865348816,
+      "val_ce": 0.8058056235313416
+    },
+    {
+      "step": 200,
+      "train_ce": 0.3532991111278534,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6119791865348816,
+      "val_ce": 0.7029502391815186
+    },
+    {
+      "step": 300,
+      "train_ce": 0.33261534571647644,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.625,
+      "val_ce": 0.6651191711425781
+    },
+    {
+      "step": 400,
+      "train_ce": 0.3221941590309143,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6341145634651184,
+      "val_ce": 0.6179545521736145
+    },
+    {
+      "step": 500,
+      "train_ce": 0.31553542613983154,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6705729365348816,
+      "val_ce": 0.581784188747406
+    },
+    {
+      "step": 600,
+      "train_ce": 0.2973845899105072,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6901041865348816,
+      "val_ce": 0.5600518584251404
+    },
+    {
+      "step": 700,
+      "train_ce": 0.28405654430389404,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6848958134651184,
+      "val_ce": 0.5232937335968018
+    },
+    {
+      "step": 800,
+      "train_ce": 0.25904595851898193,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.7174479365348816,
+      "val_ce": 0.5176882147789001
+    },
+    {
+      "step": 900,
+      "train_ce": 0.23576222360134125,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.734375,
+      "val_ce": 0.4732978343963623
+    },
+    {
+      "step": 1000,
+      "train_ce": 0.2538485527038574,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.7825520634651184,
+      "val_ce": 0.4343990385532379
+    }
+  ],
+  "validation_ce": 0.4343990385532379,
+  "validation_accuracy": 0.7825520634651184,
+  "seconds": 5.21191909999834,
+  "parameters": 6114,
+  "checkpoint": "results\\laptop\\evaluate\\gru32_legacy_baseline_s23.pt",
+  "test": {
+    "iid": {
+      "accuracy": 0.7489999990463256,
+      "n": 1000
+    },
+    "premises_4": {
+      "accuracy": 0.6809999995231628,
+      "n": 1000
+    },
+    "premises_5": {
+      "accuracy": 0.6530000014305115,
+      "n": 1000
+    },
+    "premises_6": {
+      "accuracy": 0.6419999995231629,
+      "n": 1000
+    },
+    "shuffled_order": {
+      "accuracy": 0.589,
+      "n": 1000
+    },
+    "propositional": {
+      "accuracy": 0.4444444477558136,
+      "n": 36
+    }
+  },
+  "peak_process_mb": 496.263168
+}

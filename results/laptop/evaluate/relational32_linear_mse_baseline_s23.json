@@ -1,0 +1,120 @@
+{
+  "spec": {
+    "id": "relational32_linear_mse_baseline_s23",
+    "model": "relational32",
+    "seed": 23,
+    "rung": "baseline",
+    "loss": "linear_mse",
+    "alpha": 0.2,
+    "legacy": false,
+    "steps": 1000,
+    "n_eval": 1000,
+    "data_dir": "data",
+    "out": "results/laptop",
+    "stage": "evaluate"
+  },
+  "history": [
+    {
+      "step": 100,
+      "train_ce": 0.00029480888042598963,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0003392682410776615
+    },
+    {
+      "step": 200,
+      "train_ce": 0.0001655167288845405,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0001890480489237234
+    },
+    {
+      "step": 300,
+      "train_ce": 0.00010983464744640514,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 0.00012514556874521077
+    },
+    {
+      "step": 400,
+      "train_ce": 8.339298801729456e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 9.263351239496842e-05
+    },
+    {
+      "step": 500,
+      "train_ce": 6.788764585508034e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 7.396713044727221e-05
+    },
+    {
+      "step": 600,
+      "train_ce": 6.272898463066667e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 6.306751311058179e-05
+    },
+    {
+      "step": 700,
+      "train_ce": 5.228212467045523e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 5.6494944146834314e-05
+    },
+    {
+      "step": 800,
+      "train_ce": 4.835115032619797e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 5.210503513808362e-05
+    },
+    {
+      "step": 900,
+      "train_ce": 4.7722176532261074e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 4.965085827279836e-05
+    },
+    {
+      "step": 1000,
+      "train_ce": 4.383488339954056e-05,
+      "transfer_loss": 0.0,
+      "val_accuracy": 1.0,
+      "val_ce": 4.774938497575931e-05
+    }
+  ],
+  "validation_ce": 4.774938497575931e-05,
+  "validation_accuracy": 1.0,
+  "seconds": 24.609088100001827,
+  "parameters": 26498,
+  "checkpoint": "results\\laptop\\evaluate\\relational32_linear_mse_baseline_s23.pt",
+  "test": {
+    "iid": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "premises_4": {
+      "accuracy": 0.99,
+      "n": 1000
+    },
+    "premises_5": {
+      "accuracy": 0.985,
+      "n": 1000
+    },
+    "premises_6": {
+      "accuracy": 0.9680000023841858,
+      "n": 1000
+    },
+    "shuffled_order": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "propositional": {
+      "accuracy": 0.5277777910232544,
+      "n": 36
+    }
+  },
+  "peak_process_mb": 499.294208
+}

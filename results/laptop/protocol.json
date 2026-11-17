@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "source_sha256": "91d0233be2183a23e2bb3cf7af782fe33bcba1635003392aa535552dc56f5fad",
+  "steps": 1000,
+  "n_eval": 1000,
+  "data_manifest_sha256": "0304a7b6f0a7118fa672f04494c3842f513c2b19ca5fb0ee223e4a7394b17d64",
+  "torch": "2.9.1+cpu",
+  "numpy": "2.3.5",
+  "python": "3.13.11",
+  "selection_seeds": [
+    0,
+    1
+  ],
+  "evaluation_seeds": [
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "split": "blake2b exact statement encoding 80/10/10; recorded examples excluded from validation/test",
+  "selection_metric": "mean IID validation cross entropy; no OOD test selection"
+}

@@ -15,8 +15,8 @@ What is downloaded (all pinned to exact commits so results are reproducible):
    Mach. Intell., MIT licence, github.com/pkuxmq/Brain-guided_LLM). Three ROI
    families: deductive-reasoning network (Prado 2011 meta-analysis spheres),
    multiple-demand network, language network.
-2. HCP relational-processing task fMRI -- trial-wise responses for 24 HCP
-   subjects in the MD network (same release), plus stimulus->problem mapping.
+2. HCP relational-processing task fMRI -- trial-wise responses for 20 HCP
+   subjects in the MD network (19 in matched stimulus groups), plus stimulus->problem mapping.
 3. ds003076 BIDS metadata (events.tsv with the exact premises/conclusions,
    participants.tsv, dataset_description.json) from OpenNeuro's official
    GitHub mirror (github.com/OpenNeuroDatasets/ds003076).

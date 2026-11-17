@@ -1,0 +1,4 @@
+{
+  "premises": [["MORE", 0, 1], ["MORE", 1, 2], ["MORE", 2, 3]],
+  "conclusion": ["MORE", 0, 3]
+}

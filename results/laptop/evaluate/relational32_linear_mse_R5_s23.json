@@ -1,0 +1,120 @@
+{
+  "spec": {
+    "id": "relational32_linear_mse_R5_s23",
+    "model": "relational32",
+    "seed": 23,
+    "rung": "R5",
+    "loss": "linear_mse",
+    "alpha": 0.2,
+    "legacy": false,
+    "steps": 1000,
+    "n_eval": 1000,
+    "data_dir": "data",
+    "out": "results/laptop",
+    "stage": "evaluate"
+  },
+  "history": [
+    {
+      "step": 100,
+      "train_ce": 0.0006106076762080193,
+      "transfer_loss": 1.6080315113067627,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0007950463914312422
+    },
+    {
+      "step": 200,
+      "train_ce": 0.0005948279285803437,
+      "transfer_loss": 1.3871760368347168,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0008739176555536687
+    },
+    {
+      "step": 300,
+      "train_ce": 0.0003571565612219274,
+      "transfer_loss": 1.3510961532592773,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0004067786503583193
+    },
+    {
+      "step": 400,
+      "train_ce": 0.00019671506015583873,
+      "transfer_loss": 1.350732684135437,
+      "val_accuracy": 1.0,
+      "val_ce": 0.00024662172654643655
+    },
+    {
+      "step": 500,
+      "train_ce": 0.00015265717229340225,
+      "transfer_loss": 1.3507100343704224,
+      "val_accuracy": 1.0,
+      "val_ce": 0.00018095267296303064
+    },
+    {
+      "step": 600,
+      "train_ce": 0.00012854902888648212,
+      "transfer_loss": 1.3507061004638672,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0001463399239582941
+    },
+    {
+      "step": 700,
+      "train_ce": 0.00011404857650632039,
+      "transfer_loss": 1.3507053852081299,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0001270903885597363
+    },
+    {
+      "step": 800,
+      "train_ce": 0.00010554913751548156,
+      "transfer_loss": 1.3507046699523926,
+      "val_accuracy": 1.0,
+      "val_ce": 0.00011576990800676867
+    },
+    {
+      "step": 900,
+      "train_ce": 0.00010405167267890647,
+      "transfer_loss": 1.350704550743103,
+      "val_accuracy": 1.0,
+      "val_ce": 0.00010900366032728925
+    },
+    {
+      "step": 1000,
+      "train_ce": 9.842775034485385e-05,
+      "transfer_loss": 1.3507041931152344,
+      "val_accuracy": 1.0,
+      "val_ce": 0.00010419537284178659
+    }
+  ],
+  "validation_ce": 0.00010419537284178659,
+  "validation_accuracy": 1.0,
+  "seconds": 26.194039600002725,
+  "parameters": 26498,
+  "checkpoint": "results\\laptop\\evaluate\\relational32_linear_mse_R5_s23.pt",
+  "test": {
+    "iid": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "premises_4": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "premises_5": {
+      "accuracy": 0.975,
+      "n": 1000
+    },
+    "premises_6": {
+      "accuracy": 0.965,
+      "n": 1000
+    },
+    "shuffled_order": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "propositional": {
+      "accuracy": 0.5277777910232544,
+      "n": 36
+    }
+  },
+  "peak_process_mb": 499.4048
+}

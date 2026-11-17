@@ -1,0 +1,8 @@
+select: 6 unfinished jobs, 2 CPU worker(s)
+{'id': 'gru32_linear_mse_baseline_s0', 'val_accuracy': 0.6588541865348816, 'seconds': 4.6}
+{'id': 'gru32_linear_mse_baseline_s1', 'val_accuracy': 0.68359375, 'seconds': 4.6}
+{'id': 'gru64_linear_mse_baseline_s0', 'val_accuracy': 0.7083333134651184, 'seconds': 5.9}
+{'id': 'gru64_linear_mse_baseline_s1', 'val_accuracy': 0.7044270634651184, 'seconds': 5.9}
+{'id': 'relational32_linear_mse_baseline_s0', 'val_accuracy': 1.0, 'seconds': 26.1}
+{'id': 'relational32_linear_mse_baseline_s1', 'val_accuracy': 1.0, 'seconds': 26.1}
+{'model': 'relational32', 'mean_validation_ce': {'gru32': 0.5706188678741455, 'gru64': 0.5040934383869171, 'relational32': 3.6601751162379514e-05}, 'note': 'Selected before reading final-test results. Brain weight fixed at 0.2 for every ladder arm.'}

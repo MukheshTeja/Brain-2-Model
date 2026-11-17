@@ -1,0 +1,22 @@
+[
+  {
+    "file": "Brain2Model Transfer Training sensory and decision models with human neural activity as a teacher (1).pdf",
+    "bytes": 15778222,
+    "sha256": "8b6022e6487d2e47c467c173749bba9dec3d014ab499c53d59e062740aab1d1e"
+  },
+  {
+    "file": "Beyond representational alignment with brain-guided language models for robust reasoning.pdf",
+    "bytes": 3378661,
+    "sha256": "5b3d424d8ab57fda5d412db96f87aa1145e17cbed7cd24fc8bde03bb1fa882f0"
+  },
+  {
+    "file": "Alignment with human representations supports robust few-shot learning.pdf",
+    "bytes": 1347224,
+    "sha256": "7b0626fd1398c64721cdf0416e7da92693c513669966b086984f89337861d437"
+  },
+  {
+    "file": "Shared computational principles for language processing in humans and deep language model.pdf",
+    "bytes": 5479285,
+    "sha256": "31ce3ea517063b2ec890e6bdf03c20d6dcc86ec755a4e86773e84e3c493b9032"
+  }
+]

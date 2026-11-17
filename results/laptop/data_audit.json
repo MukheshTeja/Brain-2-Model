@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "errors": [],
+  "files_verified": 162,
+  "total_bytes": 23579110,
+  "sources": {
+    "pkuxmq/Brain-guided_LLM": "f4c6f6b1b737a3885e198185456c7f1241fd2149",
+    "OpenNeuroDatasets/ds003076": "aa412641e9240e0b35915a90db933e6d6c6cbeb9"
+  },
+  "scope": "Released derivatives for the laptop pipeline; not full source-paper replications",
+  "optional_not_required": [
+    "raw BOLD and preprocessing",
+    "B2M patient recordings",
+    "ECoG podcast data",
+    "ImageNet and human similarity judgments"
+  ],
+  "ds003076": {
+    "subjects": 10,
+    "problems": 70,
+    "voxels_per_network": {
+      "deductive_reasoning": [
+        313
+      ],
+      "md": [
+        3082
+      ],
+      "language": [
+        1359
+      ]
+    }
+  },
+  "hcp": {
+    "downloaded_subjects": 20,
+    "usable_subjects": 19,
+    "unique_stimuli": 47,
+    "blocks": {
+      "list1": 11,
+      "list2": 8
+    },
+    "exclusion": "One subject has a stimulus set without five matching subjects"
+  }
+}

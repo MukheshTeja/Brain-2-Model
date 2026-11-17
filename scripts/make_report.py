@@ -301,11 +301,10 @@ def main():
         m_real, _, hi_real, _ = hl[("B", "ds003076", "real_dr")]
         m_pw = hl[("B", "ds003076", "planted_realsnr")][0]
         L("")
-        L(f"- The test works: it flags known structure and rejects matched-statistics noise in both phases.")
-        L(f"- At the real data's own signal-to-noise, genuine structure would give ≈ {m_pw:+.3f}; real deductive-"
-          f"reasoning fMRI gives {m_real:+.3f} (upper 95% bound {hi_real:+.3f}), i.e. at most "
-          f"{hi_real / m_pw:.0%} of what real structure would produce, and below the pre-set smallest effect of "
-          f"interest ({SESOI['B']}).")
+        L("- Inspect the planted and hollow controls below before interpreting any real-data contrast; calibration is specific to these simulations and students.")
+        L(f"- This particular planted control gives R5-R3 ≈ {m_pw:+.3f}; real deductive-reasoning "
+          f"fMRI gives {m_real:+.3f} (upper 95% bound {hi_real:+.3f}). Matching one SNR summary does not "
+          "make the planted model a universal bound on real brain structure.")
         L("- HCP relational fMRI: aligning to the real brain helps exactly as much as aligning to its statistics-matched "
           "null (R5 ≈ R3 ≈ R0 ≈ +0.01): a **regularizer** effect.")
         L("- RQ1: brain-similarity mediates the gain only where structure was planted (ACME > 0); on real fMRI the "
@@ -398,8 +397,8 @@ def main():
           f"R5−R0 = {np.mean(x0[0] - x0[1]):+.3f}. Noise scale used: {meta.get('realsnr_noise_scale')}.\n")
 
     L("## 3. Generalization fingerprints (GRU, α = 0.2)\n")
-    L("Regularizers lift every variant a little; real structure lifts the variants that share it. "
-      "`R5−R3` isolates the structure-specific part per variant.\n")
+    L("Compare the pattern across variants. `R5−R3` is an operational contrast against the chosen "
+      "surrogate; it does not uniquely identify transferred computational structure.\n")
     if fps:
         L("![fingerprints](fig6_fingerprint.png)\n")
     for name, f in fps.items():
@@ -412,6 +411,9 @@ def main():
         L("")
 
     L("## 4. RQ1 — does brain-similarity *cause* better generalization?\n")
+    L("These mediation estimates are exploratory associations. Causal interpretation additionally "
+      "requires identification assumptions about mediator-outcome confounding; an alpha sweep alone "
+      "does not establish them.\n")
     if dose_panels:
         L("![dose response](fig3_dose_response.png)\n")
     L("α is the randomised dose; mediator = CKA(student, real/structured brain embedding); covariate = CKA(student, "
