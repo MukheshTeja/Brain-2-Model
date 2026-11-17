@@ -1,0 +1,24 @@
+{
+  "recommendation": {
+    "checkpoint": "results\\laptop\\evaluate\\relational32_linear_mse_baseline_s20.pt",
+    "selection": "minimum IID validation CE among selected-model baseline and R5 seeds",
+    "model": "relational32",
+    "parameters": 26498,
+    "brain_condition": "baseline"
+  },
+  "architecture_difference": {
+    "mean_difference": 0.25613777950286865,
+    "ci_low": 0.2221864227311301,
+    "ci_high": 0.2900891362746072,
+    "paired_signflip_p_greater": 0.03125,
+    "seeds": 5
+  },
+  "R5_minus_R3": {
+    "mean_difference": 0.002239999790191538,
+    "ci_low": -0.011371265933976528,
+    "ci_high": 0.015851265514359603,
+    "paired_signflip_p_greater": 0.3125,
+    "seeds": 5,
+    "holm_p": 1.0
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "model": "relational32",
+  "mean_validation_ce": {
+    "gru32": 0.5706188678741455,
+    "gru64": 0.5040934383869171,
+    "relational32": 3.6601751162379514e-05
+  },
+  "note": "Selected before reading final-test results. Brain weight fixed at 0.2 for every ladder arm."
+}

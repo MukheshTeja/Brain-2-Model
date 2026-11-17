@@ -1,0 +1,7 @@
+{
+  "checkpoint": "results\\laptop\\evaluate\\relational32_linear_mse_baseline_s20.pt",
+  "selection": "minimum IID validation CE among selected-model baseline and R5 seeds",
+  "model": "relational32",
+  "parameters": 26498,
+  "brain_condition": "baseline"
+}

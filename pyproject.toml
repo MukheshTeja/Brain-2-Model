@@ -17,6 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+laptop = ["psutil>=5.9"]
 fmri = ["nilearn>=0.10"]
 wandb = ["wandb>=0.16"]
 

@@ -1,0 +1,64 @@
+{
+  "baseline": {
+    "mean_difference": -0.016200000553131134,
+    "ci_low": -0.03375714693835795,
+    "ci_high": 0.0013571458320956846,
+    "paired_signflip_p_greater": 1.0,
+    "seeds": 5
+  },
+  "R0": {
+    "mean_difference": -0.006960000019073531,
+    "ci_low": -0.023632917293483623,
+    "ci_high": 0.009712917255336559,
+    "paired_signflip_p_greater": 0.84375,
+    "seeds": 5,
+    "holm_p": 1.0
+  },
+  "R1": {
+    "mean_difference": -0.012600000267028833,
+    "ci_low": -0.02839404419962286,
+    "ci_high": 0.003194043665565194,
+    "paired_signflip_p_greater": 0.96875,
+    "seeds": 5,
+    "holm_p": 1.0
+  },
+  "R2": {
+    "mean_difference": -0.008120000343322808,
+    "ci_low": -0.023709288848751484,
+    "ci_high": 0.007469288162105868,
+    "paired_signflip_p_greater": 0.9375,
+    "seeds": 5,
+    "holm_p": 1.0
+  },
+  "R3": {
+    "mean_difference": 0.002239999790191538,
+    "ci_low": -0.011371265933976528,
+    "ci_high": 0.015851265514359603,
+    "paired_signflip_p_greater": 0.3125,
+    "seeds": 5,
+    "holm_p": 1.0
+  },
+  "R4": {
+    "mean_difference": -0.01336000026702886,
+    "ci_low": -0.031033027936551764,
+    "ci_high": 0.004313027402494047,
+    "paired_signflip_p_greater": 0.96875,
+    "seeds": 5,
+    "holm_p": 1.0
+  },
+  "knockout": {
+    "mean_difference": -0.0056000003623962735,
+    "ci_low": -0.027809478216435864,
+    "ci_high": 0.016609477491643317,
+    "paired_signflip_p_greater": 0.71875,
+    "seeds": 5
+  },
+  "architecture_vs_legacy": {
+    "mean_difference": 0.25613777950286865,
+    "ci_low": 0.2221864227311301,
+    "ci_high": 0.2900891362746072,
+    "paired_signflip_p_greater": 0.03125,
+    "seeds": 5
+  },
+  "interpretation": "Exploratory performance study. A gain from architecture does not establish brain-specific transfer. No source-paper superiority claim."
+}

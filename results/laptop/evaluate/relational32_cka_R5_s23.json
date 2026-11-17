@@ -1,0 +1,120 @@
+{
+  "spec": {
+    "id": "relational32_cka_R5_s23",
+    "model": "relational32",
+    "seed": 23,
+    "rung": "R5",
+    "loss": "cka",
+    "alpha": 0.2,
+    "legacy": false,
+    "steps": 1000,
+    "n_eval": 1000,
+    "data_dir": "data",
+    "out": "results/laptop",
+    "stage": "evaluate"
+  },
+  "history": [
+    {
+      "step": 100,
+      "train_ce": 0.0009951876709237695,
+      "transfer_loss": 1.736389398574829,
+      "val_accuracy": 1.0,
+      "val_ce": 0.001518944394774735
+    },
+    {
+      "step": 200,
+      "train_ce": 0.0031257173977792263,
+      "transfer_loss": 1.551758885383606,
+      "val_accuracy": 1.0,
+      "val_ce": 0.004251575563102961
+    },
+    {
+      "step": 300,
+      "train_ce": 0.0038803224451839924,
+      "transfer_loss": 1.4749538898468018,
+      "val_accuracy": 1.0,
+      "val_ce": 0.003314277855679393
+    },
+    {
+      "step": 400,
+      "train_ce": 0.0027043321169912815,
+      "transfer_loss": 1.4240062236785889,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0027697570621967316
+    },
+    {
+      "step": 500,
+      "train_ce": 0.0029572173953056335,
+      "transfer_loss": 1.361229419708252,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0031050555408000946
+    },
+    {
+      "step": 600,
+      "train_ce": 0.002567205112427473,
+      "transfer_loss": 1.3009717464447021,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0030900018755346537
+    },
+    {
+      "step": 700,
+      "train_ce": 0.0027990026865154505,
+      "transfer_loss": 1.2709341049194336,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0025858355220407248
+    },
+    {
+      "step": 800,
+      "train_ce": 0.002355968113988638,
+      "transfer_loss": 1.2565979957580566,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0022553058806806803
+    },
+    {
+      "step": 900,
+      "train_ce": 0.002227846998721361,
+      "transfer_loss": 1.2475440502166748,
+      "val_accuracy": 1.0,
+      "val_ce": 0.002374029951170087
+    },
+    {
+      "step": 1000,
+      "train_ce": 0.0022725043818354607,
+      "transfer_loss": 1.2430986166000366,
+      "val_accuracy": 1.0,
+      "val_ce": 0.0021876185201108456
+    }
+  ],
+  "validation_ce": 0.001518944394774735,
+  "validation_accuracy": 1.0,
+  "seconds": 25.142395200000465,
+  "parameters": 26498,
+  "checkpoint": "results\\laptop\\evaluate\\relational32_cka_R5_s23.pt",
+  "test": {
+    "iid": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "premises_4": {
+      "accuracy": 0.9729999985694885,
+      "n": 1000
+    },
+    "premises_5": {
+      "accuracy": 0.9420000009536743,
+      "n": 1000
+    },
+    "premises_6": {
+      "accuracy": 0.9489999971389771,
+      "n": 1000
+    },
+    "shuffled_order": {
+      "accuracy": 1.0,
+      "n": 1000
+    },
+    "propositional": {
+      "accuracy": 0.5277777910232544,
+      "n": 36
+    }
+  },
+  "peak_process_mb": 499.4048
+}

@@ -1,0 +1,6 @@
+file,original_items,evaluated_items,unique_symbolic_inputs,excluded_items
+deductive_reasoning_data_test.json,1600,163,160,1437
+deductive_reasoning_data_test_4premises.json,800,800,798,0
+deductive_reasoning_data_test_5premises.json,160,160,160,0
+deductive_reasoning_data_test_6premises.json,80,80,80,0
+deductive_reasoning_data_test_propositional.json,600,400,244,200

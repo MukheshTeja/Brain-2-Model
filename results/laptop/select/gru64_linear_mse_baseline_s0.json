@@ -1,0 +1,94 @@
+{
+  "spec": {
+    "id": "gru64_linear_mse_baseline_s0",
+    "model": "gru64",
+    "seed": 0,
+    "rung": "baseline",
+    "loss": "linear_mse",
+    "alpha": 0.2,
+    "legacy": false,
+    "steps": 1000,
+    "n_eval": 1000,
+    "data_dir": "data",
+    "out": "results/laptop",
+    "stage": "select"
+  },
+  "history": [
+    {
+      "step": 100,
+      "train_ce": 0.5877838730812073,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.5169270634651184,
+      "val_ce": 0.8193596005439758
+    },
+    {
+      "step": 200,
+      "train_ce": 0.44986745715141296,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6223958134651184,
+      "val_ce": 0.6628085374832153
+    },
+    {
+      "step": 300,
+      "train_ce": 0.3702513575553894,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6419270634651184,
+      "val_ce": 0.6179360747337341
+    },
+    {
+      "step": 400,
+      "train_ce": 0.26548564434051514,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6458333134651184,
+      "val_ce": 0.5893293023109436
+    },
+    {
+      "step": 500,
+      "train_ce": 0.2614346444606781,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6510416865348816,
+      "val_ce": 0.5614493489265442
+    },
+    {
+      "step": 600,
+      "train_ce": 0.3379738926887512,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6575520634651184,
+      "val_ce": 0.5542196035385132
+    },
+    {
+      "step": 700,
+      "train_ce": 0.23739610612392426,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.6940104365348816,
+      "val_ce": 0.5264496207237244
+    },
+    {
+      "step": 800,
+      "train_ce": 0.23025768995285034,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.7018229365348816,
+      "val_ce": 0.5126144289970398
+    },
+    {
+      "step": 900,
+      "train_ce": 0.24528363347053528,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.7044270634651184,
+      "val_ce": 0.5081512331962585
+    },
+    {
+      "step": 1000,
+      "train_ce": 0.2548687756061554,
+      "transfer_loss": 0.0,
+      "val_accuracy": 0.7083333134651184,
+      "val_ce": 0.5042308568954468
+    }
+  ],
+  "validation_ce": 0.5042308568954468,
+  "validation_accuracy": 0.7083333134651184,
+  "seconds": 5.893677699998079,
+  "parameters": 18370,
+  "checkpoint": "results\\laptop\\select\\gru64_linear_mse_baseline_s0.pt",
+  "peak_process_mb": 410.689536
+}

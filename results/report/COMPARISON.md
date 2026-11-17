@@ -1,9 +1,14 @@
 # CD-B2M vs previous work
 
+> Historical exploratory report. The "replayed controls" below are local
+> analogues, not source-paper replications. Its broad superiority and causal
+> claims are not established by these data. See `../laptop/REPORT.md` for fresh
+> controlled results and sourced published values. A single hollow simulation
+> does not estimate a general false-positive rate across datasets.
+
 ## 1. What each prior paper would have concluded on our data
 
-Every prior paper validated brain transfer against one weak control. We replayed each
-paper's control on our runs (GRU, α = 0.2, structure-specific gain = R5 minus control,
+We evaluated local analogues of several control types on our runs (GRU, α = 0.2, structure-specific gain = R5 minus control,
 one-sided paired t-test across seeds, * = p < 0.05). The two **hollow** rows have no
 task structure by construction, so any "transfer" verdict there is a false positive.
 
@@ -20,9 +25,7 @@ task structure by construction, so any "transfer" verdict there is a false posit
 statistics, the controls used by B2M (Gaussian noise) and Li et al. (shuffled pairing)
 both report significant "brain transfer". Xiao et al.'s random-signal baseline is the
 same kind of control as R0. Only the Null Ladder, with the max-entropy rung and the
-knockout, rejects it. This is the confound the deck set out to expose (H1 vs H2), now
-shown empirically: the controls in the literature cannot tell structure transfer from a
-structured-noise regularizer.
+knockout, rejects it. This illustrates a possible confound in this simulation. It does not establish the error rate or validity of the original papers on their own data.
 
 ## 2. Feature comparison (deck slide 8, now backed by an implementation)
 
@@ -54,10 +57,8 @@ reported before can appear even when there is no structure to transfer (the holl
 
 ## 4. Is our approach leading?
 
-- **On what can be concluded: yes.** It is the only approach here that is validated
-  against known answers. It detects planted structure even at the real data's SNR
-  (+0.048, p ≈ 5 × 10⁻¹⁶, 30 seeds) and, unlike every prior control, does not produce false positives on
-  structure-free brains. It also covers the most dimensions of the comparison (§2).
+- **On what can be concluded:** these simulations provide known-answer checks for this implementation; they do not establish methodological superiority. It detects planted structure even at the real data's SNR
+  (+0.048, p ≈ 5 × 10⁻¹⁶, 30 seeds) and did not flag the specific hollow controls tested here. It also covers the most dimensions of the comparison (§2).
 - **On raw accuracy gains: no, and that is not the goal.** Our students are small CPU
   models trained from scratch, so their absolute gains are smaller than LLM-scale results.
   The finding is that on real fMRI the structure-specific part of the gain is at most about
@@ -68,5 +69,4 @@ reported before can appear even when there is no structure to transfer (the holl
   voxel-level regions (Xiao), where our RQ2 runs at the network level because the public
   betas lack coordinates.
 - **Next step for a fair head-to-head:** apply the Null Ladder to Xiao et al.'s NARF
-  pipeline (same ds003076 betas, an LLM student). The code here plugs in directly: their
-  brain targets become R5, and R0–R4 and the knockout are built by `cdb2m/fmri/brain_teacher.py`.
+  pipeline (same ds003076 betas, an LLM student). This would require a new NARF integration and matched evaluation; the existing teacher builder supplies candidate controls, not a complete drop-in reproduction.

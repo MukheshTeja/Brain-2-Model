@@ -1,5 +1,11 @@
 # CD-B2M results
 
+> Historical protocol and stored results. See `../laptop/REPORT.md` for the
+> fresh laptop experiment. The planted-SNR comparison below is specific to its
+> simulation; it is not a universal upper bound on real computational structure.
+> Mediation is an association analysis with additional causal assumptions.
+> These runs do not demonstrate superiority over the source-paper methodologies.
+
 ## Summary (GRU, the student whose sandbox checks pass in both phases)
 
 Structure-specific gain = zero-shot gain with the brain teacher (R5) minus with its max-entropy null R3, which keeps all of the brain signal's 1st/2nd-order statistics but none of its task pairing (mean, 95% CI):

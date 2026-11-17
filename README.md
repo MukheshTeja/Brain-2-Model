@@ -1,5 +1,54 @@
 # CD-B2M: Causally-Disentangled Brain-to-Model Transfer
 
+## Updated laptop experiment (November 2026)
+
+Use [results/laptop/REPORT.md](results/laptop/REPORT.md) for the new measured
+comparison, figures, limitations and saved-checkpoint locations. The historical
+results below use a different protocol and must not be mixed with these fresh runs.
+This update adds a 26,498-parameter learned relational student, exact-input split
+isolation, validation checkpoint selection, gradient clipping, AdamW and cosine
+decay. The relational model is specific to statement-encoded reasoning, not a
+general language model. Architecture improvements are separate from brain transfer.
+
+```powershell
+python -m venv --system-site-packages .venv
+.\.venv\Scripts\python -m pip install -e .
+.\.venv\Scripts\python -m scripts.audit_data
+.\.venv\Scripts\python -m scripts.run_laptop --stage select --workers 2
+.\.venv\Scripts\python -m scripts.run_laptop --stage evaluate --workers 2
+.\.venv\Scripts\python -m scripts.report_laptop
+.\.venv\Scripts\python -m scripts.evaluate_released
+.\scripts\test_laptop.ps1
+```
+
+Use `--workers 1` when other applications consume most RAM. The new runner caps
+concurrency at two CPU processes, each with one compute thread. It needs only the
+23.6 MB released derivatives already downloaded. All 162 files passed the local
+manifest audit. The manifest checks download integrity; it is not independent
+certification of the upstream scientific preprocessing. The current local venv
+reuses the installed CPU PyTorch. CUDA installation and full-size LLM training
+are unnecessary for this experiment.
+
+Use the path in `results/laptop/recommended_checkpoint.json` with:
+
+```powershell
+.\.venv\Scripts\python -m scripts.predict_laptop --checkpoint PATH_FROM_JSON --input configs/laptop_example.json
+```
+
+New jobs resume from atomic JSON records and .pt checkpoints. Source, protocol
+and manifest hashes prevent silent reuse after a change; pass a fresh `--out`
+directory for a different experiment. Paper values and PDF page references are
+stored in `configs/published_benchmarks.json`. Published results use different
+tasks, models and metrics, so the figures are context rather than a ranking.
+
+**Interpretation correction for the historical report:** the existing control
+comparisons are local analogues, not replications of the cited papers. Neither
+alignment nor observational mediation alone establishes causality. A hollow
+simulation result does not establish a general false-positive rate, and a planted
+control is one particular generative model, not a universal bound on real brain
+structure. The full deck protocol still requires validating the new architecture
+on planted/hollow controls, more seeds, and architecture/region analyses.
+
 Do gains from aligning AI models to brain embeddings (B2M, Aquino et al. 2025)
 reflect genuine transfer of computational structure (**H1**), or a regularizer
 exploiting structured noise (**H2**)? We test this with a **Null Ladder** of
